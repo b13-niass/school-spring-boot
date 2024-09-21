@@ -5,6 +5,9 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.io.Serial;
+import java.util.List;
+
 @Data
 @Builder(toBuilder = true)
 @AllArgsConstructor
@@ -16,27 +19,29 @@ public class Apprenant {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String nom_tuteur;
-    private String prenom_tuteur;
-    private String contact_tuteur;
-    private String cni_file;
-    private String extrait_file;
-    private String diplome_file;
-    private String casier_file;
-    private String photo_couverture;
+    private String nomTuteur;
+    private String prenomTuteur;
+    private String contactTuteur;
 
-    @OneToOne
-    @JoinColumn(name = "user_id", unique = true, nullable = false)
+    private String cniFile;
+    private String extraitFile;
+    private String diplomeFile;
+    private String casierFile;
+    private String photoCouverture;
+
+    @ManyToOne
     private User user;
 
     @ManyToOne
-    @JoinColumn(name = "referentiel_id")
-    private Referentiel referentiel;
+    private PromoReferentiel promoReferentiel;
 
     @ManyToOne
-    @JoinColumn(name = "etat_id")
     private EtatApprenant etatApprenant;
+
+    @OneToMany(mappedBy = "apprenant")
+    private List<Note> notes;
 
     // Getters and Setters
 }
+
 

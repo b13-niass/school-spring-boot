@@ -1,9 +1,12 @@
 package org.example.odc.data.entity;
+
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.util.List;
 
 @Data
 @Builder(toBuilder = true)
@@ -17,14 +20,16 @@ public class PromoReferentiel {
     private Long id;
 
     @ManyToOne
-    @MapsId("promoId")
-    @JoinColumn(name = "promo_id")
     private Promo promo;
 
     @ManyToOne
-    @MapsId("referentielId")
-    @JoinColumn(name = "referentiel_id")
     private Referentiel referentiel;
+
+    @OneToMany(mappedBy = "promoReferentiel")
+    private List<Apprenant> apprenants;
+
+    @OneToMany(mappedBy = "promoReferentiel")
+    private List<Competence> competences;
 
     // Getters and Setters
 }

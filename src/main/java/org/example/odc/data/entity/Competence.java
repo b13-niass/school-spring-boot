@@ -16,16 +16,15 @@ public class Competence {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(unique = true, nullable = false)
+    @Column(unique = true)
     private String nom;
 
     private String description;
-
-    private Integer duree_acquisition;
-
-    @Column(nullable = false)
+    private int dureeAcquisition;
     private String type;
 
-    // Getters and Setters
+    @ManyToOne
+    private PromoReferentiel promoReferentiel;
+
 }
 

@@ -5,6 +5,9 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
+import java.util.List;
+
 @Data
 @Builder(toBuilder = true)
 @AllArgsConstructor
@@ -16,16 +19,17 @@ public class Promo {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(unique = true, nullable = false)
+    @Column(unique = true)
     private String libelle;
 
-    private java.sql.Date date_debut;
-    private java.sql.Date date_fin;
+    private LocalDate dateDebut;
+    private LocalDate dateFin;
+    private int dureeReel;
+    private String etat; // Actif, Cloture, Inactif
 
-    private Integer duree_reel;
-
-    @Column(nullable = false)
-    private String etat;
+    @OneToMany(mappedBy = "promo")
+    private List<PromoReferentiel> promoReferentiels;
 
     // Getters and Setters
 }
+

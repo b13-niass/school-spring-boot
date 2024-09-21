@@ -1,9 +1,13 @@
 package org.example.odc.data.entity;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.example.odc.enums.ReferentielStatusEnum;
+
+import java.util.List;
 
 @Data
 @Builder(toBuilder = true)
@@ -16,16 +20,22 @@ public class Referentiel {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(unique = true, nullable = false)
+    @Column(unique = true)
     private String libelle;
 
-    @Column(unique = true, nullable = false)
+    @Column(unique = true)
     private String code;
 
     private String description;
+    private String photoCouverture;
 
-    private String photo_couverture;
+    @OneToMany(mappedBy = "referentiel")
+    @JsonManagedReference
+    private List<PromoReferentiel> promoReferentiels;
 
+    @Enumerated(EnumType.STRING)
+    private ReferentielStatusEnum status;
     // Getters and Setters
 }
+
 

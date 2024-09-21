@@ -5,6 +5,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Data
 @Builder(toBuilder = true)
 @AllArgsConstructor
@@ -16,12 +18,15 @@ public class Module {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(unique = true, nullable = false)
+    @Column(unique = true)
     private String nom;
 
     private String description;
+    private int dureeAcquisition;
 
-    private Integer duree_acquisition;
+    @OneToMany(mappedBy = "module")
+    private List<Note> notes;
 
-    // Getters and Setters
+    @ManyToOne
+    private Competence competence;
 }

@@ -1,51 +1,50 @@
 package org.example.odc.data.entity;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Data
 @Builder(toBuilder = true)
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-//@Table(name = "user")
+@Table(name = "users")
 public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
     private String nom;
-
-    @Column(nullable = false)
     private String prenom;
-
     private String adresse;
 
     @Column(unique = true)
     private String telephone;
 
     @ManyToOne
-    @JoinColumn(name = "fonction_id")
+    @JsonBackReference
     private Fonction fonction;
 
     @ManyToOne
-    @JoinColumn(name = "role_id", nullable = false)
     private Role role;
-
-    @Column(unique = true, nullable = false)
+    @JsonBackReference
+    @Column(unique = true)
     private String email;
 
     private String photo;
-
-    @Column(nullable = false)
-    private String status;
-
-    @Column(nullable = false)
+    private String status; // Bloquer, Actif, Inactif
     private String password;
+
+    @OneToMany(mappedBy = "user")
+    @JsonIgnore
+    private List<Emargement> emargements;
 
     // Getters and Setters
 }

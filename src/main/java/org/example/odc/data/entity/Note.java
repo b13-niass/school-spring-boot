@@ -18,15 +18,14 @@ public class Note {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "apprenant_id", nullable = false)
     private Apprenant apprenant;
 
     @ManyToOne
-    @JoinColumn(name = "module_id", nullable = false)
     private Module module;
 
-    private Double note;
+    private double note;
 
     // Getters and Setters
 }
+
 

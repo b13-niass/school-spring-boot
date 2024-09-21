@@ -1,11 +1,13 @@
 package org.example.odc.data.entity;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.Set;
+import java.util.List;
 
 @Data
 @Builder(toBuilder = true)
@@ -18,9 +20,13 @@ public class Role {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(unique = true, nullable = false)
     private String libelle;
+
+    @OneToMany(mappedBy = "role")
+    @JsonManagedReference
+    private List<User> users;
 
     // Getters and Setters
 }
+
 
