@@ -1,4 +1,4 @@
-package org.example.odc.schoolspringboot;
+package org.example.odc;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
