@@ -12,6 +12,7 @@ import java.util.Optional;
 public interface ReferentielRepository extends JpaRepository<Referentiel, Long> {
     Optional<Referentiel> findByLibelle(String libelle);
     Optional<Referentiel> findByCode(String code);
+    Optional<Referentiel> findByIdAndDeletedFalse(Long id);
     Collection<Referentiel> findByDeletedFalseAndStatus(ReferentielStatusEnum status);
     @Override
     default void delete(Referentiel referentiel) {

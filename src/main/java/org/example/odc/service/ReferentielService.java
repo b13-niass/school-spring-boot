@@ -21,6 +21,5 @@ public interface ReferentielService {
     ReferentielDtoResponse update(Referentiel referentiel);
     String delete(Long referentielId);
     Collection<ModuleDtoResponse> getModulesByReferentiel(Long referentielId);
-
     Collection<CompetenceDtoResponse> getCompetencesByReferentiel(Long referentielId);
 }

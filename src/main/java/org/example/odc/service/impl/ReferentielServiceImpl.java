@@ -61,7 +61,7 @@ public class ReferentielServiceImpl implements ReferentielService {
     @Override
     public ResponseEntity<?> getById(Long id,@Nullable String filter) {
         ReferentielDtoResponse ref = this.repository
-                .findById(id)
+                .findByIdAndDeletedFalse(id)
                 .map(responseMapper::toDTO)
                 .orElse(null);
 
