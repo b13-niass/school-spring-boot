@@ -29,12 +29,10 @@ public class User {
     private String telephone;
 
     @ManyToOne
-    @JsonBackReference
     private Fonction fonction;
 
     @ManyToOne
     private Role role;
-    @JsonBackReference
     @Column(unique = true)
     private String email;
 
@@ -43,9 +41,6 @@ public class User {
     private String password;
 
     @OneToMany(mappedBy = "user")
-    @JsonIgnore
     private List<Emargement> emargements;
-
-    // Getters and Setters
 }
 

@@ -1,4 +1,5 @@
 package org.example.odc.data.entity;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -30,11 +31,14 @@ public class Referentiel {
     private String photoCouverture;
 
     @OneToMany(mappedBy = "referentiel")
-    @JsonManagedReference
+//    @JsonIgnore
     private List<PromoReferentiel> promoReferentiels;
 
     @Enumerated(EnumType.STRING)
     private ReferentielStatusEnum status;
+
+    @OneToMany(mappedBy = "referentiel")
+    private List<Competence> competences;
     // Getters and Setters
 }
 

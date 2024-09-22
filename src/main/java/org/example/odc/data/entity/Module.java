@@ -1,4 +1,5 @@
 package org.example.odc.data.entity;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -25,8 +26,10 @@ public class Module {
     private int dureeAcquisition;
 
     @OneToMany(mappedBy = "module")
+    @JsonIgnore
     private List<Note> notes;
 
     @ManyToOne
+    @JsonIgnore
     private Competence competence;
 }

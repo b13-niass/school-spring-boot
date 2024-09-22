@@ -23,10 +23,9 @@ public class Role {
     private String libelle;
 
     @OneToMany(mappedBy = "role")
-    @JsonManagedReference
+    @JsonIgnore
     private List<User> users;
 
-    // Getters and Setters
 }
 
 

@@ -25,6 +25,5 @@ public class Emargement {
     @ManyToOne
     private User user;
 
-    // Getters and Setters
 }
 

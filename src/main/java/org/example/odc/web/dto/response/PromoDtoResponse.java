@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.example.odc.data.entity.Promo;
+import org.example.odc.data.entity.PromoReferentiel;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -24,43 +25,6 @@ public class PromoDtoResponse {
     private String etat;
 
     // List of PromoReferentielDtoResponse (or simply promo referentiel names/codes)
-    private List<PromoReferentielDtoResponse> promoReferentiels;
+    private List<PromoReferentiel> promoReferentiels;
 
-    // Convert Promo entity to DTO
-    public static PromoDtoResponse toDTO(Promo promo) {
-        if (promo == null) {
-            return null;
-        }
-
-        return PromoDtoResponse.builder()
-                .id(promo.getId())
-                .libelle(promo.getLibelle())
-                .dateDebut(promo.getDateDebut())
-                .dateFin(promo.getDateFin())
-                .dureeReel(promo.getDureeReel())
-                .etat(promo.getEtat())
-                .promoReferentiels(promo.getPromoReferentiels() != null
-                        ? promo.getPromoReferentiels().stream()
-                        .map(PromoReferentielDtoResponse::toDTO)
-                        .collect(Collectors.toList())
-                        : null)
-                .build();
-    }
-
-    // Convert DTO back to Promo entity
-    public static Promo toEntity(PromoDtoResponse promoDTO) {
-        if (promoDTO == null) {
-            return null;
-        }
-
-        Promo promo = new Promo();
-        promo.setId(promoDTO.getId());
-        promo.setLibelle(promoDTO.getLibelle());
-        promo.setDateDebut(promoDTO.getDateDebut());
-        promo.setDateFin(promoDTO.getDateFin());
-        promo.setDureeReel(promoDTO.getDureeReel());
-        promo.setEtat(promoDTO.getEtat());
-        // Map promoReferentiels back to entity if needed
-        return promo;
-    }
 }

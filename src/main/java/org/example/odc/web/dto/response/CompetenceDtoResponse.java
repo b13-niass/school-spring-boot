@@ -1,10 +1,15 @@
 package org.example.odc.web.dto.response;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.example.odc.data.entity.Competence;
+import org.example.odc.data.entity.PromoReferentiel;
+import org.example.odc.data.entity.Referentiel;
+
+import java.util.List;
 
 @Data
 @Builder(toBuilder = true)
@@ -18,42 +23,9 @@ public class CompetenceDtoResponse {
     private int dureeAcquisition;
     private String type;
 
-    // Representing related PromoReferentiel entity
-    private PromoReferentielDtoResponse promoReferentiel;
+    @JsonIgnore
+    private Referentiel referentiel;
 
-    // Convert Competence entity to DTO
-    public static CompetenceDtoResponse toDTO(Competence competence) {
-        if (competence == null) {
-            return null;
-        }
+    private List<ModuleDtoResponse> modules;
 
-        return CompetenceDtoResponse.builder()
-                .id(competence.getId())
-                .nom(competence.getNom())
-                .description(competence.getDescription())
-                .dureeAcquisition(competence.getDureeAcquisition())
-                .type(competence.getType())
-                .promoReferentiel(competence.getPromoReferentiel() != null
-                        ? PromoReferentielDtoResponse.toDTO(competence.getPromoReferentiel())
-                        : null)
-                .build();
-    }
-
-    // Convert DTO back to Competence entity
-    public static Competence toEntity(CompetenceDtoResponse competenceDTO) {
-        if (competenceDTO == null) {
-            return null;
-        }
-
-        Competence competence = new Competence();
-        competence.setId(competenceDTO.getId());
-        competence.setNom(competenceDTO.getNom());
-        competence.setDescription(competenceDTO.getDescription());
-        competence.setDureeAcquisition(competenceDTO.getDureeAcquisition());
-        competence.setType(competenceDTO.getType());
-        competence.setPromoReferentiel(competenceDTO.getPromoReferentiel() != null
-                ? PromoReferentielDtoResponse.toEntity(competenceDTO.getPromoReferentiel())
-                : null);
-        return competence;
-    }
 }

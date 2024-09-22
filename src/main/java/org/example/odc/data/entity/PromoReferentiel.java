@@ -1,5 +1,6 @@
 package org.example.odc.data.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -20,16 +21,17 @@ public class PromoReferentiel {
     private Long id;
 
     @ManyToOne
+    @JsonIgnore
     private Promo promo;
 
     @ManyToOne
+    @JsonIgnore
     private Referentiel referentiel;
 
     @OneToMany(mappedBy = "promoReferentiel")
+    @JsonIgnore
     private List<Apprenant> apprenants;
 
-    @OneToMany(mappedBy = "promoReferentiel")
-    private List<Competence> competences;
 
     // Getters and Setters
 }

@@ -24,7 +24,7 @@ public class Fonction {
     private String description;
 
     @OneToMany(mappedBy = "fonction")
-    @JsonManagedReference
+    @JsonIgnore
     private List<User> users;
 
     // Getters and Setters

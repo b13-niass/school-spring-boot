@@ -1,9 +1,12 @@
 package org.example.odc.data.entity;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.util.List;
 
 @Data
 @Builder(toBuilder = true)
@@ -24,7 +27,11 @@ public class Competence {
     private String type;
 
     @ManyToOne
-    private PromoReferentiel promoReferentiel;
+    @JsonIgnore
+    private Referentiel referentiel;
+
+    @OneToMany(mappedBy = "competence")
+    private List<Module> modules;
 
 }
 

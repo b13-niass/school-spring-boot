@@ -15,7 +15,7 @@ import java.util.List;
 @Builder(toBuilder = true)
 @AllArgsConstructor
 @NoArgsConstructor
-public class ReferentielDtoResponse {
+public class RefOnlyDtoResponse {
 
     @JsonIgnore
     private Long id;
@@ -25,8 +25,9 @@ public class ReferentielDtoResponse {
     private String description;
     private String photoCouverture;
     private ReferentielStatusEnum status;
+    @JsonIgnore
     private List<Competence> competences;
+    @JsonIgnore
     private List<PromoReferentiel> promoReferentiels;
-
 }
 

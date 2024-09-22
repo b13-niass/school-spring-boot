@@ -1,5 +1,6 @@
 package org.example.odc.data.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -18,9 +19,11 @@ public class Note {
     private Long id;
 
     @ManyToOne
+    @JsonIgnore
     private Apprenant apprenant;
 
     @ManyToOne
+    @JsonIgnore
     private Module module;
 
     private double note;

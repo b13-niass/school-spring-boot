@@ -1,33 +1,52 @@
 package org.example.odc.web.controller.impl;
 
-import org.example.odc.data.entity.User;
-import org.example.odc.data.repository.UserRepository;
-import org.example.odc.web.dto.response.UserDtoResponse;
+import jakarta.annotation.Nullable;
+import org.example.odc.data.entity.Competence;
+import org.example.odc.data.entity.Module;
+import org.example.odc.data.entity.Referentiel;
+import org.example.odc.enums.ReferentielStatusEnum;
+import org.example.odc.service.ReferentielService;
+import org.example.odc.web.controller.ReferentielController;
+import org.example.odc.web.dto.response.RefOnlyDtoResponse;
+import org.example.odc.web.dto.response.ReferentielDtoResponse;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-import java.util.Optional;
+import java.util.Collection;
 
 @RestController
 @RequestMapping("/api/v1/referentiels")
-public class ReferentielControllerImpl {
-    public final UserRepository userRepository;
-    public ReferentielControllerImpl(UserRepository userRepository){
-        this.userRepository = userRepository;
+public class ReferentielControllerImpl  implements ReferentielController {
+
+    private final ReferentielService service;
+
+    public ReferentielControllerImpl(ReferentielService service) {
+        this.service = service;
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<UserDtoResponse> getById(@PathVariable long id) {
-        Optional<User> userOpt = userRepository.findById(id);
+    public ResponseEntity<?> getById(@PathVariable long id, @RequestParam(required = false) String filter) {
+       return this.service.getById(id, filter);
+    }
 
-        if (userOpt.isPresent()) {
-            UserDtoResponse userDTO = UserDtoResponse.toDTO(userOpt.get());
-            return ResponseEntity.ok(userDTO);
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+    @GetMapping("")
+    @Override
+    public Collection<RefOnlyDtoResponse> getAll(@RequestParam(required = false) ReferentielStatusEnum filter) {
+        return this.service.getAll(filter);
+    }
+
+    @Override
+    public ReferentielDtoResponse save(Referentiel referentiel, @Nullable Collection<Competence> competences, @Nullable Collection<Module> modules) {
+        return null;
+    }
+
+    @Override
+    public ReferentielDtoResponse update(Referentiel referentiel) {
+        return null;
+    }
+
+    @Override
+    public void delete(Referentiel referentiel) {
+
     }
 }
