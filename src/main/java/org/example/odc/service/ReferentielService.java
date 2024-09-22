@@ -19,7 +19,7 @@ public interface ReferentielService {
     ResponseEntity<?> getById(Long id,@Nullable String filter);
     ReferentielDtoResponse save(Referentiel referentiel, @Nullable Collection<Competence> competences, @Nullable Collection<Module> modules);
     ReferentielDtoResponse update(Referentiel referentiel);
-    void delete(Referentiel referentiel);
+    String delete(Long referentielId);
     Collection<ModuleDtoResponse> getModulesByReferentiel(Long referentielId);
 
     Collection<CompetenceDtoResponse> getCompetencesByReferentiel(Long referentielId);

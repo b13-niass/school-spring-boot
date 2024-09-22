@@ -9,6 +9,7 @@ import org.example.odc.service.ReferentielService;
 import org.example.odc.web.controller.ReferentielController;
 import org.example.odc.web.dto.response.RefOnlyDtoResponse;
 import org.example.odc.web.dto.response.ReferentielDtoResponse;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -35,18 +36,21 @@ public class ReferentielControllerImpl  implements ReferentielController {
         return this.service.getAll(filter);
     }
 
+    @PostMapping("")
     @Override
     public ReferentielDtoResponse save(Referentiel referentiel, @Nullable Collection<Competence> competences, @Nullable Collection<Module> modules) {
         return null;
     }
 
+    @PatchMapping("/{id}")
     @Override
     public ReferentielDtoResponse update(Referentiel referentiel) {
         return null;
     }
 
+    @DeleteMapping("/{id}")
     @Override
-    public void delete(Referentiel referentiel) {
-
+    public ResponseEntity<String>  delete(@PathVariable long id) {
+        return new ResponseEntity<>(this.service.delete(id), HttpStatus.OK);
     }
 }

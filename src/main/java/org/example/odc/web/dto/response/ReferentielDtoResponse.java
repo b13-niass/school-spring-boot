@@ -9,6 +9,7 @@ import org.example.odc.data.entity.Competence;
 import org.example.odc.data.entity.PromoReferentiel;
 import org.example.odc.enums.ReferentielStatusEnum;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Data
@@ -27,6 +28,12 @@ public class ReferentielDtoResponse {
     private ReferentielStatusEnum status;
     private List<Competence> competences;
     private List<PromoReferentiel> promoReferentiels;
+
+    @JsonIgnore
+    private boolean deleted;
+
+    @JsonIgnore
+    private LocalDateTime deletedAt;
 
 }
 

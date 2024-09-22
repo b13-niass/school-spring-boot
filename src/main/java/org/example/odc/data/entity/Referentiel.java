@@ -8,6 +8,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.example.odc.enums.ReferentielStatusEnum;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Data
@@ -39,7 +40,11 @@ public class Referentiel {
 
     @OneToMany(mappedBy = "referentiel")
     private List<Competence> competences;
-    // Getters and Setters
+
+    @Column(nullable = false)
+    private boolean deleted = false;
+
+    private LocalDateTime deletedAt;
 }
 
 

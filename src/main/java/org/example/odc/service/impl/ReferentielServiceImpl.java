@@ -46,10 +46,10 @@ public class ReferentielServiceImpl implements ReferentielService {
     @Override
     public Collection<RefOnlyDtoResponse> getAll(@Nullable ReferentielStatusEnum filter) {
         if (filter == null) {
-            return refOnlyMapper.toDTOList(repository.findAll()
+            return refOnlyMapper.toDTOList(repository.findByDeletedFalse()
                     .stream().filter(ref -> ref.getStatus() == ReferentielStatusEnum.ACTIF).toList());
         }else {
-            Collection<Referentiel> filteredRef = repository.findAllByStatus(filter);
+            Collection<Referentiel> filteredRef = repository.findByDeletedFalseAndStatus(filter);
             if (!filteredRef.isEmpty()) {
                 return refOnlyMapper.toDTOList(filteredRef);
             } else {
@@ -99,8 +99,12 @@ public class ReferentielServiceImpl implements ReferentielService {
     }
 
     @Override
-    public void delete(Referentiel referentiel) {
+    public String delete(Long referentielId) {
+        Referentiel referentiel = repository.findById(referentielId)
+                .orElseThrow(() -> new ReferentielException("Referentiel non trouvé", HttpStatus.NOT_FOUND));
 
+        repository.delete(referentiel);
+        return "Referentiel soft-deleted successfully.";
     }
 
     @Override

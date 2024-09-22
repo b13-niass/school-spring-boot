@@ -16,5 +16,5 @@ public interface ReferentielController {
     ResponseEntity<?> getById(long id, String filter);
     ReferentielDtoResponse save(Referentiel referentiel, @Nullable Collection<Competence> competences, @Nullable Collection<Module> modules);
     ReferentielDtoResponse update(Referentiel referentiel);
-    void delete(Referentiel referentiel);
+    ResponseEntity<String> delete(long id);
 }
