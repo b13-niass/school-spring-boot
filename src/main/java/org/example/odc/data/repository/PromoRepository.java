@@ -5,4 +5,5 @@ import org.example.odc.data.entity.Role;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface PromoRepository extends JpaRepository<Promo, Long> {
+    boolean existsByLibelle(String libelle);
 }

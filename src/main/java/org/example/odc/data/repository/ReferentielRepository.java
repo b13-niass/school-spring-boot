@@ -7,12 +7,12 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.time.LocalDateTime;
 import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 
-public interface ReferentielRepository extends JpaRepository<Referentiel, Long> {
+public interface ReferentielRepository extends SoftDeleteRepository<Referentiel, Long> {
     Optional<Referentiel> findByLibelle(String libelle);
     Optional<Referentiel> findByCode(String code);
-    Optional<Referentiel> findByIdAndDeletedFalse(Long id);
     Collection<Referentiel> findByDeletedFalseAndStatus(ReferentielStatusEnum status);
     @Override
     default void delete(Referentiel referentiel) {
@@ -20,8 +20,8 @@ public interface ReferentielRepository extends JpaRepository<Referentiel, Long> 
         referentiel.setDeletedAt(LocalDateTime.now());
         save(referentiel);
     }
-
-    Collection<Referentiel> findByDeletedFalse();
     boolean existsByLibelle(String libelle);
     boolean existsByCode(String code);
+    boolean existsByIdIn(List<Long> ids);
+    boolean existsByIdInAndStatusIs(List<Long> ids, ReferentielStatusEnum status);
 }

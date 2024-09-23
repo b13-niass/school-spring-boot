@@ -1,20 +1,17 @@
 package org.example.odc.data.entity;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDate;
 import java.util.List;
 
+@EqualsAndHashCode(callSuper = true)
 @Data
 @Builder(toBuilder = true)
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-public class Promo {
-
+public class Promo extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -27,7 +24,7 @@ public class Promo {
     private int dureeReel;
     private String etat; // Actif, Cloture, Inactif
 
-    @OneToMany(mappedBy = "promo")
+    @OneToMany(mappedBy = "promo", cascade = CascadeType.ALL)
     private List<PromoReferentiel> promoReferentiels;
 
     // Getters and Setters

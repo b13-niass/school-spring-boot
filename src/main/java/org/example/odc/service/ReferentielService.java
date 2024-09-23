@@ -12,6 +12,7 @@ import org.example.odc.web.dto.response.ReferentielDtoResponse;
 import org.springframework.http.ResponseEntity;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 
 public interface ReferentielService {
@@ -22,4 +23,5 @@ public interface ReferentielService {
     String delete(Long referentielId);
     Collection<ModuleDtoResponse> getModulesByReferentiel(Long referentielId);
     Collection<CompetenceDtoResponse> getCompetencesByReferentiel(Long referentielId);
+
 }

@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Collection;
 
 @RestController
-@RequestMapping("/api/v1/referentiels")
+@RequestMapping("/referentiels")
 public class ReferentielControllerImpl  implements ReferentielController {
 
     private final ReferentielService service;

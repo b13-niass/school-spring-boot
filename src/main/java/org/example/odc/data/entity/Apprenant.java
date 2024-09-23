@@ -1,19 +1,17 @@
 package org.example.odc.data.entity;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.io.Serial;
 import java.util.List;
 
+@EqualsAndHashCode(callSuper = true)
 @Data
 @Builder(toBuilder = true)
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-public class Apprenant {
+public class Apprenant extends BaseEntity{
     // ajout create_at et update_at
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
