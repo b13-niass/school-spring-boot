@@ -11,14 +11,13 @@ import lombok.NoArgsConstructor;
 import org.example.odc.validator.annotation.NotEmptyIfPresent;
 import org.example.odc.validator.annotation.UniqueCompetenceName;
 
-import java.util.Collection;
 import java.util.List;
 
 @Data
 @Builder(toBuilder = true)
 @AllArgsConstructor
 @NoArgsConstructor
-public class CompetenceDTORequest {
+public class CompetenceUpdateDTORequest {
     @NotEmpty(message = "Competence name cannot be empty")
     @UniqueCompetenceName
     private String nom;
@@ -35,5 +34,5 @@ public class CompetenceDTORequest {
 
     @Valid
     @NotEmptyIfPresent(message = "Les modules ne peuvent pas être vides")
-    private List<ModuleDTORequest> modules;
+    private List<ModuleUpdateDTORequest> modules;
 }

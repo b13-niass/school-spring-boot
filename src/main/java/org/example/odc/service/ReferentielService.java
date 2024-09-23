@@ -17,7 +17,7 @@ import java.util.Optional;
 public interface ReferentielService {
     Collection<RefOnlyDtoResponse> getAll(@Nullable ReferentielStatusEnum filter);
     ResponseEntity<?> getById(Long id,@Nullable String filter);
-    ReferentielDtoResponse save(Referentiel referentiel, @Nullable Collection<Competence> competences, @Nullable Collection<Module> modules);
+    ReferentielDtoResponse save(Referentiel referentiel);
     ReferentielDtoResponse update(Referentiel referentiel);
     String delete(Long referentielId);
     Collection<ModuleDtoResponse> getModulesByReferentiel(Long referentielId);

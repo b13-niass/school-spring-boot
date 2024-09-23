@@ -20,5 +20,8 @@ public interface ReferentielRepository extends JpaRepository<Referentiel, Long> 
         referentiel.setDeletedAt(LocalDateTime.now());
         save(referentiel);
     }
+
     Collection<Referentiel> findByDeletedFalse();
+    boolean existsByLibelle(String libelle);
+    boolean existsByCode(String code);
 }

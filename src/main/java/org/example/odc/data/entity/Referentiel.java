@@ -16,11 +16,11 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-public class Referentiel {
+public class Referentiel extends BaseEntity{
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+//    @Id
+//    @GeneratedValue(strategy = GenerationType.IDENTITY)
+//    private Long id;
 
     @Column(unique = true)
     private String libelle;
@@ -38,7 +38,7 @@ public class Referentiel {
     @Enumerated(EnumType.STRING)
     private ReferentielStatusEnum status;
 
-    @OneToMany(mappedBy = "referentiel")
+    @OneToMany(mappedBy = "referentiel", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Competence> competences;
 
     @Column(nullable = false)

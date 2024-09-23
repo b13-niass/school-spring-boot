@@ -30,7 +30,7 @@ public class Competence {
     @JsonIgnore
     private Referentiel referentiel;
 
-    @OneToMany(mappedBy = "competence")
+    @OneToMany(mappedBy = "competence", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Module> modules;
 
 }

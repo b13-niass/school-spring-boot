@@ -13,7 +13,7 @@ import org.example.odc.validator.annotation.UniqueModuleName;
 @Builder(toBuilder = true)
 @AllArgsConstructor
 @NoArgsConstructor
-public class ModuleDTORequest {
+public class ModuleUpdateDTORequest {
     @NotEmpty(message = "Module name cannot be empty")
     @UniqueModuleName
     private String nom;

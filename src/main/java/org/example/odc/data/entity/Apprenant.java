@@ -14,7 +14,7 @@ import java.util.List;
 @NoArgsConstructor
 @Entity
 public class Apprenant {
-
+    // ajout create_at et update_at
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

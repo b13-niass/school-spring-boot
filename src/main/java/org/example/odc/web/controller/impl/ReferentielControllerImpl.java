@@ -6,7 +6,9 @@ import org.example.odc.enums.ReferentielStatusEnum;
 import org.example.odc.service.ReferentielService;
 import org.example.odc.web.controller.ReferentielController;
 import org.example.odc.web.dto.request.ReferentielDTORequest;
+import org.example.odc.web.dto.request.ReferentielUpdateDTORequest;
 import org.example.odc.web.dto.request.mapper.ReferentielRequestMapper;
+import org.example.odc.web.dto.request.mapper.ReferentielUpdateRequestMapper;
 import org.example.odc.web.dto.response.RefOnlyDtoResponse;
 import org.example.odc.web.dto.response.ReferentielDtoResponse;
 import org.springframework.http.HttpStatus;
@@ -21,10 +23,13 @@ public class ReferentielControllerImpl  implements ReferentielController {
 
     private final ReferentielService service;
     private final ReferentielRequestMapper referentielRequestMapper;
+    private final ReferentielUpdateRequestMapper updateRequestMapper;
 
-    public ReferentielControllerImpl(ReferentielService service, ReferentielRequestMapper referentielRequestMapper) {
+    public ReferentielControllerImpl(ReferentielService service, ReferentielRequestMapper referentielRequestMapper,
+     ReferentielUpdateRequestMapper updateRequestMapper) {
         this.service = service;
         this.referentielRequestMapper = referentielRequestMapper;
+        this.updateRequestMapper = updateRequestMapper;
     }
 
     @GetMapping("/{id}")
@@ -40,15 +45,18 @@ public class ReferentielControllerImpl  implements ReferentielController {
 
     @PostMapping("")
     @Override
-    public Referentiel save(@RequestBody @Valid ReferentielDTORequest request) {
+    public ReferentielDtoResponse save(@RequestBody @Valid ReferentielDTORequest request) {
         Referentiel referentiel = referentielRequestMapper.toEntity(request);
-        return referentiel;
+
+        return this.service.save(referentiel);
     }
 
     @PatchMapping("/{id}")
     @Override
-    public ReferentielDtoResponse update(Referentiel referentiel) {
-        return null;
+    public ReferentielDtoResponse update(@RequestBody @Valid ReferentielUpdateDTORequest referentiel, @PathVariable long id) {
+        Referentiel request =  updateRequestMapper.toEntity(referentiel);
+        request.setId(id);
+        return this.service.update(request);
     }
 
     @DeleteMapping("/{id}")

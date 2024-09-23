@@ -4,6 +4,8 @@ import jakarta.annotation.Nullable;
 import org.example.odc.data.entity.Competence;
 import org.example.odc.data.entity.Module;
 import org.example.odc.data.entity.Referentiel;
+import org.example.odc.data.repository.CompetenceRepository;
+import org.example.odc.data.repository.ModuleRepository;
 import org.example.odc.data.repository.ReferentielRepository;
 import org.example.odc.enums.ReferentielStatusEnum;
 import org.example.odc.exception.ReferentielException;
@@ -19,6 +21,7 @@ import org.example.odc.web.dto.response.mapper.ReferentielResponseMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collection;
 import java.util.List;
@@ -30,17 +33,23 @@ public class ReferentielServiceImpl implements ReferentielService {
     public ReferentielResponseMapper responseMapper;
     public RefOnlyMapper refOnlyMapper;
     public ModuleResponseMapper moduleResponseMapper;
+    private final CompetenceRepository competenceRepository;
+    private final ModuleRepository moduleRepository;
     public CompetenceResponseMapper competenceResponseMapper;
 
     public ReferentielServiceImpl(
             ReferentielRepository repository,ReferentielResponseMapper responseMapper,ModuleResponseMapper moduleResponseMapper,
             CompetenceResponseMapper competenceResponseMapper,
-            RefOnlyMapper refOnlyMapper){
+            RefOnlyMapper refOnlyMapper,
+            CompetenceRepository competenceRepository,
+            ModuleRepository moduleRepository){
         this.repository = repository;
         this.responseMapper = responseMapper;
         this.moduleResponseMapper = moduleResponseMapper;
         this.competenceResponseMapper = competenceResponseMapper;
         this.refOnlyMapper = refOnlyMapper;
+        this.competenceRepository = competenceRepository;
+        this.moduleRepository = moduleRepository;
     }
 
     @Override
@@ -89,13 +98,58 @@ public class ReferentielServiceImpl implements ReferentielService {
     }
 
     @Override
-    public ReferentielDtoResponse save(Referentiel referentiel, @Nullable Collection<Competence> competences, @Nullable Collection<Module> modules) {
-        return null;
+    @Transactional
+    public ReferentielDtoResponse save(Referentiel referentiel) {
+
+        for (Competence competence : referentiel.getCompetences()) {
+            competence.setReferentiel(referentiel);
+            for (Module module : competence.getModules()) {
+                module.setCompetence(competence);
+            }
+        }
+        return responseMapper.toDTO(repository.save(referentiel));
     }
 
     @Override
-    public ReferentielDtoResponse update(Referentiel referentiel) {
-        return null;
+    @Transactional
+    public ReferentielDtoResponse update(Referentiel dto) {
+        Referentiel referentiel = repository.findById(dto.getId())
+                .orElseThrow(() -> new ReferentielException("Référentiel not found", HttpStatus.NOT_FOUND));
+
+        referentiel.setLibelle(dto.getLibelle());
+        if (dto.getCode() != null) referentiel.setCode(dto.getCode());
+        if (dto.getDescription() != null) referentiel.setDescription(dto.getDescription());
+        if (dto.getPhotoCouverture() != null) referentiel.setPhotoCouverture(dto.getPhotoCouverture());
+        if (dto.getStatus() != null) referentiel.setStatus(ReferentielStatusEnum.valueOf(String.valueOf(dto.getStatus())));
+
+        if (dto.getCompetences() != null) {
+            for (Competence competenceDto : dto.getCompetences()) {
+                Competence competence = competenceRepository.findByReferentielAndNom(referentiel, competenceDto.getNom())
+                        .orElseGet(() -> Competence.builder().build());
+
+                competence.setNom(competenceDto.getNom());
+                competence.setDescription(competenceDto.getDescription());
+                competence.setDureeAcquisition(competenceDto.getDureeAcquisition());
+                competence.setType(competenceDto.getType());
+                competence.setReferentiel(referentiel);
+                competenceRepository.save(competence);
+
+                if (competenceDto.getModules() != null) {
+                    for (Module moduleDto : competenceDto.getModules()) {
+                        Module module = moduleRepository.findByCompetenceAndNom(competence, moduleDto.getNom())
+                                .orElseGet(() -> Module.builder().build());
+
+                        module.setNom(moduleDto.getNom());
+                        module.setDescription(moduleDto.getDescription());
+                        module.setDureeAcquisition(moduleDto.getDureeAcquisition());
+                        module.setCompetence(competence);
+                        moduleRepository.save(module);
+                    }
+                }
+            }
+        }
+
+        return responseMapper.toDTO(repository.save(referentiel));
     }
 
     @Override
@@ -125,6 +179,4 @@ public class ReferentielServiceImpl implements ReferentielService {
         return referentiel.getCompetences().stream().map(competenceResponseMapper::toDTO)
                 .toList();
     }
-
-
 }
