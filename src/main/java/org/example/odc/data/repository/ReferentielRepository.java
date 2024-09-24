@@ -4,6 +4,7 @@ import org.example.odc.data.entity.Referentiel;
 import org.example.odc.data.entity.Role;
 import org.example.odc.enums.ReferentielStatusEnum;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 
 import java.time.LocalDateTime;
 import java.util.Collection;
@@ -24,4 +25,9 @@ public interface ReferentielRepository extends SoftDeleteRepository<Referentiel,
     boolean existsByCode(String code);
     boolean existsByIdIn(List<Long> ids);
     boolean existsByIdInAndStatusIs(List<Long> ids, ReferentielStatusEnum status);
+
+    @Query("SELECT CASE WHEN r.status = 'ACTIF' THEN true ELSE false END " +
+            "FROM Referentiel r WHERE r.id = :referentielId")
+    boolean existsByIdAndStatusActive(Long referentielId);
+
 }
