@@ -20,7 +20,8 @@ public class SchoolSpringBootApplication implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
 
-//        mvn clean package
+//        mvn clean package -DskipTests
+
 
     }
 }
