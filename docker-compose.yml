@@ -9,7 +9,7 @@ services:
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=passer
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/schoolspring
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://school-spring-boot.railway.internal:5432/schoolspring
       - SPRING_DATASOURCE_USERNAME=postgres
       - SPRING_DATASOURCE_PASSWORD=passer
       - SPRING_JPA_HIBERNATE_DDL_AUTO=update
