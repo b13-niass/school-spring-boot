@@ -245,7 +245,6 @@ public class PromoServiceImpl implements PromoService {
                 .findByPromoIdAndReferentielStatus(promoId, ReferentielStatusEnum.ACTIF)
                 .orElseThrow(() -> new ReferentielException("Pas de ", HttpStatus.NOT_FOUND));
 
-        // Extract and return the list of Referentiels
         List<Referentiel> referentiels = promoReferentiels.stream()
                 .map(PromoReferentiel::getReferentiel)
                 .collect(Collectors.toList());
@@ -253,37 +252,37 @@ public class PromoServiceImpl implements PromoService {
     }
 
     public PromoStatsDTOResponse getPromoStats(Long promoId) {
-        // Fetch the Promo details
         Optional<Promo> promoOpt = promoRepository.findById(promoId);
+        System.out.println(promoOpt.isPresent());
         if (promoOpt.isEmpty()) {
             throw new PromoNotFoundException("Promo with ID " + promoId + " not found.");
         }
         Promo promo = promoOpt.get();
 
-        // Fetch active referentiels
-        List<PromoReferentiel> activeReferentiels = promoReferentielRepository.findByPromoIdAndReferentielStatus(promoId, ReferentielStatusEnum.ACTIF).orElse(null);
+        List<PromoReferentiel> activeReferentiels = promoReferentielRepository
+                .findByPromoIdAndReferentielStatus(promoId, ReferentielStatusEnum.ACTIF)
+                .orElse(null);
 
-        // Calculate total learners, active learners, inactive learners, and learners per referentiel
         AtomicInteger totalLearners = new AtomicInteger();
         AtomicInteger activeLearners = new AtomicInteger();
         AtomicInteger inactiveLearners = new AtomicInteger();
 
-        // Collect the data for active referentiels and their learner counts
         List<ReferentielStatsDTOResponse> referentielStats = activeReferentiels.stream()
                 .map(promoReferentiel -> {
                     int referentielLearnersCount = promoReferentiel.getApprenants().size();
                     totalLearners.addAndGet(referentielLearnersCount);
 
-                    // Count active and inactive learners
                     long activeCount = promoReferentiel.getApprenants().stream()
-                            .filter(apprenant -> apprenant.getEtatApprenant().getEtat().equals("ACTIF"))
+                            .filter(apprenant -> {
+                                String userStatus = apprenant.getUser().getStatus();
+                                return userStatus.equals("ACTIF") && apprenant.getEtatApprenant().equals("ACTIF");
+                            })
                             .count();
 
                     long inactiveCount = referentielLearnersCount - activeCount;
                     activeLearners.addAndGet((int) activeCount);
                     inactiveLearners.addAndGet((int) inactiveCount);
 
-                    // Return referentiel details
                     return ReferentielStatsDTOResponse.builder()
                             .id(promoReferentiel.getReferentiel().getId())
                             .libelle(promoReferentiel.getReferentiel().getLibelle())
@@ -291,7 +290,6 @@ public class PromoServiceImpl implements PromoService {
                             .build();
                 }).collect(Collectors.toList());
 
-        // Build the PromoStatsDTOResponse to return
         return PromoStatsDTOResponse.builder()
                 .id(promo.getId())
                 .libelle(promo.getLibelle())
@@ -303,4 +301,5 @@ public class PromoServiceImpl implements PromoService {
                 .referentielStats(referentielStats)
                 .build();
     }
+
 }
