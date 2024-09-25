@@ -8,6 +8,7 @@ import org.example.odc.web.dto.request.PromoUpdateDTORequest;
 import org.example.odc.web.dto.request.PromoUpdateRefDTORequest;
 import org.example.odc.web.dto.request.PromoUpdateStatusDTORequest;
 import org.example.odc.web.dto.response.PromoDtoResponse;
+import org.example.odc.web.dto.response.ReferentielDtoResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
@@ -66,5 +67,11 @@ public class PromotionContollerImpl implements PromotionContoller {
     @GetMapping("encours")
     public ResponseEntity<PromoDtoResponse> getEncours() {
         return ResponseEntity.ok(this.promoService.getEncours());
+    }
+
+    @GetMapping("{id}/referentiels")
+    public ResponseEntity<Collection<ReferentielDtoResponse>> getReferentiels(@PathVariable Long id) {
+        List<ReferentielDtoResponse> dtoResponse = this.promoService.getActiveReferentielsForPromo(id);
+        return ResponseEntity.ok(dtoResponse);
     }
 }

@@ -3,9 +3,11 @@ package org.example.odc.data.repository;
 import org.example.odc.data.entity.Promo;
 import org.example.odc.data.entity.PromoReferentiel;
 import org.example.odc.data.entity.Role;
+import org.example.odc.enums.ReferentielStatusEnum;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface PromoReferentielRepository extends JpaRepository<PromoReferentiel, Long> {
@@ -19,5 +21,7 @@ public interface PromoReferentielRepository extends JpaRepository<PromoReferenti
     boolean existsByPromoIdAndReferentielId(Long promoId, Long referentielId);
 
     Optional<PromoReferentiel> findByPromoAndReferentielId(Promo promo, Long referentiel_id);
+
+    Optional<List<PromoReferentiel>> findByPromoIdAndReferentielStatus(Long promoId, ReferentielStatusEnum referentielEtat);
 
 }

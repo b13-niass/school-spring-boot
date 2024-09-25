@@ -7,6 +7,7 @@ import org.example.odc.data.repository.PromoReferentielRepository;
 import org.example.odc.data.repository.PromoRepository;
 import org.example.odc.data.repository.ReferentielRepository;
 import org.example.odc.enums.PromoEtatEnum;
+import org.example.odc.enums.ReferentielStatusEnum;
 import org.example.odc.exception.ReferentielException;
 import org.example.odc.exception.promo.PromoAlreadyExistsException;
 import org.example.odc.exception.promo.PromoBadRequestException;
@@ -18,7 +19,9 @@ import org.example.odc.web.dto.request.PromoUpdateDTORequest;
 import org.example.odc.web.dto.request.PromoUpdateRefDTORequest;
 import org.example.odc.web.dto.request.PromoUpdateStatusDTORequest;
 import org.example.odc.web.dto.response.PromoDtoResponse;
+import org.example.odc.web.dto.response.ReferentielDtoResponse;
 import org.example.odc.web.dto.response.mapper.PromoResponseMapper;
+import org.example.odc.web.dto.response.mapper.ReferentielResponseMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -30,6 +33,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class PromoServiceImpl implements PromoService {
@@ -38,15 +42,18 @@ public class PromoServiceImpl implements PromoService {
     private final PromoReferentielRepository promoReferentielRepository;
     private final ReferentielRepository referentielRepository;
     private final PromoResponseMapper promoResponseMapper;
+    private final ReferentielResponseMapper referentielResponseMapper;
 
     public PromoServiceImpl(PromoRepository promoRepository,
                             PromoReferentielRepository promoReferentielRepository,
                             PromoResponseMapper promoResponseMapper,
-                            ReferentielRepository referentielRepository) {
+                            ReferentielRepository referentielRepository,
+                            ReferentielResponseMapper referentielResponseMapper) {
         this.promoRepository = promoRepository;
         this.promoReferentielRepository = promoReferentielRepository;
         this.promoResponseMapper = promoResponseMapper;
         this.referentielRepository = referentielRepository;
+        this.referentielResponseMapper = referentielResponseMapper;
     }
 
     @Override
@@ -229,5 +236,18 @@ public class PromoServiceImpl implements PromoService {
         Promo promo = this.promoRepository.findByEtat("EN_COUR")
                 .orElseThrow(() -> new PromoNotFoundException("Aucun Promo en cours"));
         return promoResponseMapper.toDTO(promo);
+    }
+
+    @Override
+    public List<ReferentielDtoResponse> getActiveReferentielsForPromo(Long promoId) {
+        List<PromoReferentiel> promoReferentiels = promoReferentielRepository
+                .findByPromoIdAndReferentielStatus(promoId, ReferentielStatusEnum.ACTIF)
+                .orElseThrow(() -> new ReferentielException("Pas de ", HttpStatus.NOT_FOUND));
+
+        // Extract and return the list of Referentiels
+        List<Referentiel> referentiels = promoReferentiels.stream()
+                .map(PromoReferentiel::getReferentiel)
+                .collect(Collectors.toList());
+        return referentielResponseMapper.toDTOList(referentiels);
     }
 }
