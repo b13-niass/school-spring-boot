@@ -6,6 +6,7 @@ import org.example.odc.web.dto.request.PromoUpdateDTORequest;
 import org.example.odc.web.dto.request.PromoUpdateRefDTORequest;
 import org.example.odc.web.dto.request.PromoUpdateStatusDTORequest;
 import org.example.odc.web.dto.response.PromoDtoResponse;
+import org.example.odc.web.dto.response.PromoStatsDTOResponse;
 import org.example.odc.web.dto.response.ReferentielDtoResponse;
 import org.springframework.http.ResponseEntity;
 
@@ -20,5 +21,5 @@ public interface PromoService {
     List<PromoDtoResponse> getAll();
     PromoDtoResponse getEncours();
     List<ReferentielDtoResponse> getActiveReferentielsForPromo(Long promoId);
-
+    PromoStatsDTOResponse getPromoStats(Long promoId);
 }

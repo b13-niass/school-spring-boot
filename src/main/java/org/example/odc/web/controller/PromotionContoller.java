@@ -5,8 +5,10 @@ import org.example.odc.web.dto.request.PromoUpdateDTORequest;
 import org.example.odc.web.dto.request.PromoUpdateRefDTORequest;
 import org.example.odc.web.dto.request.PromoUpdateStatusDTORequest;
 import org.example.odc.web.dto.response.PromoDtoResponse;
+import org.example.odc.web.dto.response.PromoStatsDTOResponse;
 import org.example.odc.web.dto.response.ReferentielDtoResponse;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.Collection;
 import java.util.List;
@@ -19,4 +21,5 @@ public interface PromotionContoller {
     ResponseEntity<Collection<PromoDtoResponse>> getAll();
     ResponseEntity<PromoDtoResponse> getEncours();
     ResponseEntity<Collection<ReferentielDtoResponse>> getReferentiels(Long id);
+    ResponseEntity<PromoStatsDTOResponse> getPromoStats(Long id);
 }

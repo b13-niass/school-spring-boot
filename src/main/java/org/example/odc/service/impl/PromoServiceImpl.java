@@ -6,7 +6,6 @@ import org.example.odc.data.entity.Referentiel;
 import org.example.odc.data.repository.PromoReferentielRepository;
 import org.example.odc.data.repository.PromoRepository;
 import org.example.odc.data.repository.ReferentielRepository;
-import org.example.odc.enums.PromoEtatEnum;
 import org.example.odc.enums.ReferentielStatusEnum;
 import org.example.odc.exception.ReferentielException;
 import org.example.odc.exception.promo.PromoAlreadyExistsException;
@@ -19,11 +18,12 @@ import org.example.odc.web.dto.request.PromoUpdateDTORequest;
 import org.example.odc.web.dto.request.PromoUpdateRefDTORequest;
 import org.example.odc.web.dto.request.PromoUpdateStatusDTORequest;
 import org.example.odc.web.dto.response.PromoDtoResponse;
+import org.example.odc.web.dto.response.PromoStatsDTOResponse;
 import org.example.odc.web.dto.response.ReferentielDtoResponse;
+import org.example.odc.web.dto.response.ReferentielStatsDTOResponse;
 import org.example.odc.web.dto.response.mapper.PromoResponseMapper;
 import org.example.odc.web.dto.response.mapper.ReferentielResponseMapper;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -33,6 +33,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 @Service
@@ -249,5 +250,57 @@ public class PromoServiceImpl implements PromoService {
                 .map(PromoReferentiel::getReferentiel)
                 .collect(Collectors.toList());
         return referentielResponseMapper.toDTOList(referentiels);
+    }
+
+    public PromoStatsDTOResponse getPromoStats(Long promoId) {
+        // Fetch the Promo details
+        Optional<Promo> promoOpt = promoRepository.findById(promoId);
+        if (promoOpt.isEmpty()) {
+            throw new PromoNotFoundException("Promo with ID " + promoId + " not found.");
+        }
+        Promo promo = promoOpt.get();
+
+        // Fetch active referentiels
+        List<PromoReferentiel> activeReferentiels = promoReferentielRepository.findByPromoIdAndReferentielStatus(promoId, ReferentielStatusEnum.ACTIF).orElse(null);
+
+        // Calculate total learners, active learners, inactive learners, and learners per referentiel
+        AtomicInteger totalLearners = new AtomicInteger();
+        AtomicInteger activeLearners = new AtomicInteger();
+        AtomicInteger inactiveLearners = new AtomicInteger();
+
+        // Collect the data for active referentiels and their learner counts
+        List<ReferentielStatsDTOResponse> referentielStats = activeReferentiels.stream()
+                .map(promoReferentiel -> {
+                    int referentielLearnersCount = promoReferentiel.getApprenants().size();
+                    totalLearners.addAndGet(referentielLearnersCount);
+
+                    // Count active and inactive learners
+                    long activeCount = promoReferentiel.getApprenants().stream()
+                            .filter(apprenant -> apprenant.getEtatApprenant().getEtat().equals("ACTIF"))
+                            .count();
+
+                    long inactiveCount = referentielLearnersCount - activeCount;
+                    activeLearners.addAndGet((int) activeCount);
+                    inactiveLearners.addAndGet((int) inactiveCount);
+
+                    // Return referentiel details
+                    return ReferentielStatsDTOResponse.builder()
+                            .id(promoReferentiel.getReferentiel().getId())
+                            .libelle(promoReferentiel.getReferentiel().getLibelle())
+                            .apprenantCount((long) referentielLearnersCount)
+                            .build();
+                }).collect(Collectors.toList());
+
+        // Build the PromoStatsDTOResponse to return
+        return PromoStatsDTOResponse.builder()
+                .id(promo.getId())
+                .libelle(promo.getLibelle())
+                .dateDebut(promo.getDateDebut())
+                .dateFin(promo.getDateFin())
+                .totalLearners(totalLearners.longValue())
+                .activeLearners(activeLearners.longValue())
+                .inactiveLearners(inactiveLearners.longValue())
+                .referentielStats(referentielStats)
+                .build();
     }
 }
