@@ -1,5 +1,6 @@
 package org.example.odc.exception;
 
+import org.example.odc.exception.promo.*;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -39,5 +40,36 @@ public class GlobalExceptionHandler {
 
         return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
     }
+
+    @ExceptionHandler(PromoNotFoundException.class)
+    public ResponseEntity<String> handlePromoNotFoundException(PromoNotFoundException ex, WebRequest request) {
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(PromoBadRequestException.class)
+    public ResponseEntity<String> handlePromoBadRequestException(PromoBadRequestException ex, WebRequest request) {
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(PromoAlreadyExistsException.class)
+    public ResponseEntity<String> handlePromoAlreadyExistsException(PromoAlreadyExistsException ex, WebRequest request) {
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.CONFLICT);
+    }
+
+    @ExceptionHandler(PromoUnauthorizedException.class)
+    public ResponseEntity<String> handlePromoUnauthorizedException(PromoUnauthorizedException ex, WebRequest request) {
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.UNAUTHORIZED);
+    }
+
+    @ExceptionHandler(PromoForbiddenException.class)
+    public ResponseEntity<String> handlePromoForbiddenException(PromoForbiddenException ex, WebRequest request) {
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.FORBIDDEN);
+    }
+
+    @ExceptionHandler(PromoInternalServerException.class)
+    public ResponseEntity<String> handlePromoInternalServerException(PromoInternalServerException ex, WebRequest request) {
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
 
 }

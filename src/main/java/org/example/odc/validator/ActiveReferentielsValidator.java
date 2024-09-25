@@ -21,8 +21,8 @@ public class ActiveReferentielsValidator implements ConstraintValidator<ActiveRe
     @Override
     public boolean isValid(PromoUpdateRefDTORequest request, ConstraintValidatorContext context) {
         List<Long> referentielIdsToAdd = request.getReferentielIdsToAdd();
-        Long promoId = 1L;
-
+        Long promoId = request.getPromoId();
+//
 
         if (referentielIdsToAdd == null || referentielIdsToAdd.isEmpty()) {
             return true;
@@ -33,14 +33,10 @@ public class ActiveReferentielsValidator implements ConstraintValidator<ActiveRe
             boolean isAlreadyAssociated = promoReferentielRepository.existsByPromoIdAndReferentielId(promoId, referentielId);
 
             if (!isActive) {
-                context.buildConstraintViolationWithTemplate("Le référentiel avec l'ID " + referentielId + " n'est pas actif.")
-                        .addConstraintViolation();
                 return false;
             }
 
             if (isAlreadyAssociated) {
-                context.buildConstraintViolationWithTemplate("Le référentiel avec l'ID " + referentielId + " est déjà associé à cette promotion.")
-                        .addConstraintViolation();
                 return false;
             }
         }

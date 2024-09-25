@@ -1,9 +1,12 @@
 package org.example.odc.data.repository;
 
+import org.example.odc.data.entity.Promo;
 import org.example.odc.data.entity.PromoReferentiel;
 import org.example.odc.data.entity.Role;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+
+import java.util.Optional;
 
 public interface PromoReferentielRepository extends JpaRepository<PromoReferentiel, Long> {
     @Query("SELECT CASE WHEN COUNT(a) > 0 THEN true ELSE false END " +
@@ -14,4 +17,7 @@ public interface PromoReferentielRepository extends JpaRepository<PromoReferenti
     @Query("SELECT CASE WHEN COUNT(pr) > 0 THEN true ELSE false END " +
             "FROM PromoReferentiel pr WHERE pr.promo.id = :promoId AND pr.referentiel.id = :referentielId")
     boolean existsByPromoIdAndReferentielId(Long promoId, Long referentielId);
+
+    Optional<PromoReferentiel> findByPromoAndReferentielId(Promo promo, Long referentiel_id);
+
 }

@@ -12,10 +12,10 @@ import java.time.LocalDate;
 import java.util.List;
 
 @Data
-@ActiveReferentiels
+//@ActiveReferentiels
 public class PromoUpdateRefDTORequest {
     @JsonIgnore
-    private Long id;
+    private Long promoId;
 
     private List<Long> referentielIdsToAdd;
 

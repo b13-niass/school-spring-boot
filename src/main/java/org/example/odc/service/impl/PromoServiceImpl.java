@@ -6,17 +6,28 @@ import org.example.odc.data.entity.Referentiel;
 import org.example.odc.data.repository.PromoReferentielRepository;
 import org.example.odc.data.repository.PromoRepository;
 import org.example.odc.data.repository.ReferentielRepository;
+import org.example.odc.enums.PromoEtatEnum;
+import org.example.odc.exception.ReferentielException;
+import org.example.odc.exception.promo.PromoAlreadyExistsException;
+import org.example.odc.exception.promo.PromoBadRequestException;
+import org.example.odc.exception.promo.PromoNotFoundException;
+import org.example.odc.exception.promoref.PromoReferentielNotFoundException;
 import org.example.odc.service.PromoService;
 import org.example.odc.web.dto.request.PromoDTORequest;
 import org.example.odc.web.dto.request.PromoUpdateDTORequest;
+import org.example.odc.web.dto.request.PromoUpdateRefDTORequest;
+import org.example.odc.web.dto.request.PromoUpdateStatusDTORequest;
 import org.example.odc.web.dto.response.PromoDtoResponse;
 import org.example.odc.web.dto.response.mapper.PromoResponseMapper;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
@@ -149,5 +160,74 @@ public class PromoServiceImpl implements PromoService {
         }
     }
 
+    @Override
+    @Transactional
+    public PromoDtoResponse updateReferentiel(PromoUpdateRefDTORequest request) {
+        List<Long> referentielIdsToAdd = request.getReferentielIdsToAdd();
+        Long promoId = request.getPromoId();
 
+        Promo promo = promoRepository.findById(promoId)
+                .orElseThrow(() -> new PromoNotFoundException("Promo not found"));
+
+        // 1. Ajouter les référentiels
+        for (Long referentielIdToAdd : request.getReferentielIdsToAdd()) {
+            Referentiel referentiel = referentielRepository.findById(referentielIdToAdd)
+                    .orElseThrow(() -> new ReferentielException("Referentiel not found with id: " + referentielIdToAdd, HttpStatus.BAD_REQUEST));
+
+            boolean isActive = referentielRepository.existsByIdAndStatusActive(referentielIdToAdd);
+            boolean isAlreadyAssociated = promoReferentielRepository.existsByPromoIdAndReferentielId(promoId, referentielIdToAdd);
+
+            if (!isActive) {
+                throw new PromoBadRequestException("Toutes les referentiels à ajouter doivent etre activé");
+            }
+
+            if (isAlreadyAssociated) {
+                throw new PromoBadRequestException("Les référentiels sont déjà associer au référentiel");
+            }
+
+            PromoReferentiel promoReferentiel = PromoReferentiel.builder()
+                    .promo(promo)
+                    .referentiel(referentiel)
+                    .build();
+            promoReferentielRepository.save(promoReferentiel);
+        }
+
+        for (Long referentielIdToRemove : request.getReferentielIdsToRemove()) {
+            PromoReferentiel promoReferentiel = promoReferentielRepository.findByPromoAndReferentielId(promo, referentielIdToRemove)
+                    .orElseThrow(() -> new PromoReferentielNotFoundException("Referentiel association not found with id: " + referentielIdToRemove));
+
+            promoReferentielRepository.delete(promoReferentiel);
+        }
+        return promoResponseMapper.toDTO(promo);
+    }
+
+    @Override
+    public PromoDtoResponse updateStatus(PromoUpdateStatusDTORequest request) {
+        // Vérifier si une promotion est déjà active
+        System.out.println("teste");
+        Promo promo = promoRepository.findById(request.getPromoId())
+                .orElseThrow(() -> new PromoNotFoundException("Promo not found"));
+
+        Optional<Promo> existingPromoActif = promoRepository.findByEtat("EN_COUR");
+
+        if (request.getEtat().equals("EN_COUR") && existingPromoActif.isPresent()) {
+            throw new PromoAlreadyExistsException("Un promo Actif existe déjà");
+        }
+
+        promo.setEtat(request.getEtat());
+
+        return this.promoResponseMapper.toDTO(promoRepository.save(promo));
+    }
+
+    @Override
+    public List<PromoDtoResponse> getAll() {
+        Collection<Promo> promos = this.promoRepository.findByDeletedFalse();
+        return this.promoResponseMapper.toDTOList(promos.stream().toList());
+    }
+
+    public PromoDtoResponse getEncours(){
+        Promo promo = this.promoRepository.findByEtat("EN_COUR")
+                .orElseThrow(() -> new PromoNotFoundException("Aucun Promo en cours"));
+        return promoResponseMapper.toDTO(promo);
+    }
 }
