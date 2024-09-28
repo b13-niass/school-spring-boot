@@ -7,8 +7,8 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-
 import java.util.Optional;
+
 
 
 @SpringBootApplication
@@ -22,16 +22,16 @@ public class SchoolSpringBootApplication implements CommandLineRunner {
     public void run(String... args) throws Exception {
 
 //        mvn clean package -DskipTests
-        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-
-        // The plain text password
-        String plainPassword = "password";
-
-        // Hash the password
-        String hashedPassword = passwordEncoder.encode(plainPassword);
-
-        // Print the hashed password
-        System.out.println("Hashed Password: " + hashedPassword);
+//        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+//
+//        // The plain text password
+//        String plainPassword = "password";
+//
+//        // Hash the password
+//        String hashedPassword = passwordEncoder.encode(plainPassword);
+//
+//        // Print the hashed password
+//        System.out.println("Hashed Password: " + hashedPassword);
 
     }
 }

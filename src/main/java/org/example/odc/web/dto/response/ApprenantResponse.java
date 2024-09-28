@@ -4,18 +4,18 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.example.odc.data.entity.*;
+import org.example.odc.data.entity.EtatApprenant;
+import org.example.odc.data.entity.Note;
+import org.example.odc.data.entity.PromoReferentiel;
+import org.example.odc.data.entity.User;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
-@Data
 @Builder(toBuilder = true)
 @AllArgsConstructor
 @NoArgsConstructor
-public class ApprenantDtoResponse {
-
-    private Long id;
+@Data
+public class ApprenantResponse {
     private String nomTuteur;
     private String prenomTuteur;
     private String contactTuteur;
@@ -24,6 +24,7 @@ public class ApprenantDtoResponse {
     private String diplomeFile;
     private String casierFile;
     private String photoCouverture;
+    private String qrCode;
 
     private User user;
     private PromoReferentiel promoReferentiel;

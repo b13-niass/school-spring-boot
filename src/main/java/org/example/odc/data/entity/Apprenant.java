@@ -26,6 +26,7 @@ public class Apprenant extends BaseEntity{
     private String diplomeFile;
     private String casierFile;
     private String photoCouverture;
+    private String qrCode;
 
     @ManyToOne
     private User user;
