@@ -15,7 +15,7 @@ public class CorsConfig {
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
 
-        configuration.setAllowedOrigins(List.of("http://localhost:8084","https://school-spring-boot.onrender.com","https://cheikh-ibrahima-dieng.up.railway.app","http://cheikh-ibrahima-dieng.up.railway.app"));
+        configuration.setAllowedOrigins(List.of("http://localhost:8084","https://school-spring-boot.onrender.com","https://cheikh-ibrahima-dieng.up.railway.app/api/v1","http://cheikh-ibrahima-dieng.up.railway.app/api/v1/"));
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"));
         configuration.setAllowedHeaders(List.of("Authorization", "Content-Type"));
 
