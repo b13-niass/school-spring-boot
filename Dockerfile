@@ -6,12 +6,12 @@ COPY settings.xml /root/.m2/settings.xml
 # Copy the Maven project files to the container
 COPY pom.xml .
 COPY src ./src
-
+RUN mvn clean compile assembly:single
 # Build the application and skip tests
-RUN mvn clean package -DskipTests
+#RUN mvn clean package -DskipTests
 
 # Extract layers for optimization using the built JAR file
-RUN #java -Djarmode=layertools -jar target/*.jar extract
+#RUN java -Djarmode=layertools -jar target/*.jar extract
 
 # Runtime stage
 FROM bellsoft/liberica-openjre-debian:21-cds
@@ -22,7 +22,7 @@ WORKDIR /application
 #COPY --from=builder /builder/spring-boot-loader/ ./
 #COPY --from=builder /builder/snapshot-dependencies/ ./
 #COPY --from=builder /builder/application/ ./
-COPY --from=builder /builder/target/school-spring-boot-0.0.1-SNAPSHOT.jar ./app.jar
+COPY --from=builder /builder/target/school-spring-boot-0.0.1-SNAPSHOT-jar-with-dependencies.jar ./app.jar
 
 # Expose the application port (map it to host port 8140)
 EXPOSE 8140:8084
