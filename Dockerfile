@@ -2,6 +2,7 @@
 FROM maven:3.8.8-sapmachine-21 AS builder
 WORKDIR /builder
 
+COPY settings.xml /root/.m2/settings.xml
 # Copy the Maven project files to the container
 COPY pom.xml .
 COPY src ./src
