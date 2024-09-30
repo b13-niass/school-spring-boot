@@ -12,7 +12,6 @@ import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
 import java.util.Arrays;
-
 @Component
 @Order(8)
 public class PromoReferentielSeeder implements CommandLineRunner {
@@ -32,16 +31,17 @@ public class PromoReferentielSeeder implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
         if (seederEnabled) {
-            Promo promo = promoRepository.findById(1L).orElseThrow(() -> new RuntimeException("Promo not found"));
-            Referentiel referentiel = referentielRepository.findById(1L).orElseThrow(() -> new RuntimeException("Referentiel not found"));
+            Promo promo = promoRepository.findByLibelle("Promo 2023").orElseThrow();
+            Referentiel referentiel = referentielRepository.findByCode("WD-101").orElseThrow();
 
-            PromoReferentiel promoReferentiel = new PromoReferentiel();
-            promoReferentiel.setPromo(promo);
-            promoReferentiel.setReferentiel(referentiel);
+            PromoReferentiel promoReferentiel = PromoReferentiel.builder()
+                    .promo(promo)
+                    .referentiel(referentiel)
+                    .build();
 
-            promoReferentielRepository.save(promoReferentiel);
+            promoReferentielRepository.saveAll(Arrays.asList(promoReferentiel));
             System.out.println("PromoReferentielSeeder is running");
-        }else {
+        } else {
             System.out.println("PromoReferentielSeeder is disabled");
         }
     }

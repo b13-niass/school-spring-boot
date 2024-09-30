@@ -28,6 +28,9 @@ public class Apprenant extends BaseEntity{
     private String photoCouverture;
     private String qrCode;
 
+    @Column(unique = true, nullable = false) // Assure l'unicité du matricule
+    private String matricule;
+
     @ManyToOne
     private User user;
 

@@ -27,7 +27,7 @@ public class PromoSeeder implements CommandLineRunner {
     public void run(String... args) throws Exception {
         if (seederEnabled) {
             Promo promo1 = new Promo();
-            promo1.setLibelle("2023 Batch");
+            promo1.setLibelle("Promo 2023");
             promo1.setDateDebut(LocalDate.now());
             promo1.setDateFin(LocalDate.now().plusMonths(6));
             promo1.setDureeReel(6); // Example duration in months

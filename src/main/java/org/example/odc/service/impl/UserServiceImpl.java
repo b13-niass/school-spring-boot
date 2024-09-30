@@ -43,10 +43,11 @@ public class UserServiceImpl implements UserService {
     public UserDtoResponse create(UserDTORequest userDTORequest) {
         Role role = roleRepository.findById(userDTORequest.roleId())
                 .orElseThrow(() -> new IllegalArgumentException("Rôle introuvable avec l'ID : " + userDTORequest.roleId()));
-
-        Fonction fonction = fonctionRepository.findById(Long.parseLong(userDTORequest.fonctionId()))
-                .orElseThrow(() -> new IllegalArgumentException("Fonction introuvable avec l'ID : " + userDTORequest.fonctionId()));
-
+        Fonction fonction = null;
+        if (userDTORequest.fonctionId() != null){
+             fonction = fonctionRepository.findById(Long.parseLong(userDTORequest.fonctionId()))
+                    .orElseThrow(() -> new IllegalArgumentException("Fonction introuvable avec l'ID : " + userDTORequest.fonctionId()));
+        }
         String hashedPassword = passwordEncoder.encode(userDTORequest.password());
 
         String photoPath = uploadFileService.saveFile(userDTORequest.photo(),"photoProfile");

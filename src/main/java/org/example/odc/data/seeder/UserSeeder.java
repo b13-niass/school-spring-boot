@@ -2,6 +2,7 @@ package org.example.odc.data.seeder;
 
 import org.example.odc.data.entity.Role;
 import org.example.odc.data.entity.User;
+import org.example.odc.data.repository.RoleRepository;
 import org.example.odc.data.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
@@ -15,18 +16,21 @@ import java.util.Arrays;
 public class UserSeeder implements CommandLineRunner {
 
     private final UserRepository userRepository;
+    private final RoleRepository roleRepository;
     @Value("${seeder.enabled}")
     private boolean seederEnabled;
 
-    public UserSeeder(UserRepository userRepository) {
+    public UserSeeder(UserRepository userRepository, RoleRepository roleRepository) {
         this.userRepository = userRepository;
+        this.roleRepository = roleRepository;
     }
 
     @Override
     public void run(String... args) throws Exception {
         if (seederEnabled) {
-            Role role = Role.builder().id(1L).build();
-            Role role1 = Role.builder().id(3L).build();
+            Role roleAdmin = roleRepository.findByLibelle("Admin").orElseThrow();
+            Role roleApprenant = roleRepository.findByLibelle("Apprenant").orElseThrow();
+
             User user1 = User.builder()
                     .nom("John")
                     .prenom("Doe")
@@ -34,7 +38,7 @@ public class UserSeeder implements CommandLineRunner {
                     .email("john.doe@example.com")
                     .status("Actif")
                     .password("password")
-                    .role(role)
+                    .role(roleAdmin)
                     .build();
 
             User user2 = User.builder()
@@ -44,13 +48,14 @@ public class UserSeeder implements CommandLineRunner {
                     .email("jane.doe@example.com")
                     .status("Actif")
                     .password("password")
-                    .role(role1)
+                    .role(roleApprenant)
                     .build();
 
             userRepository.saveAll(Arrays.asList(user1, user2));
             System.out.println("UserSeeder is running");
-        }else {
+        } else {
             System.out.println("UserSeeder is disabled");
         }
     }
 }
+

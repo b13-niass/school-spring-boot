@@ -55,6 +55,7 @@ public class ApprenantSeeder implements CommandLineRunner {
                     .diplomeFile("path/to/diplome1")
                     .casierFile("path/to/casier1")
                     .photoCouverture("path/to/photo1")
+                    .matricule("WD_2023_0001")
                     .build();
 
             Apprenant apprenant2 = Apprenant.builder()
@@ -69,6 +70,7 @@ public class ApprenantSeeder implements CommandLineRunner {
                     .diplomeFile("path/to/diplome2")
                     .casierFile("path/to/casier2")
                     .photoCouverture("path/to/photo2")
+                    .matricule("WD_2023_0002")
                     .build();
 
             apprenantRepository.saveAll(Arrays.asList(apprenant1, apprenant2));

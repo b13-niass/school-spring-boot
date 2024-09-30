@@ -1,6 +1,5 @@
 package org.example.odc.web.dto.request;
 
-import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
@@ -9,8 +8,9 @@ import org.example.odc.validator.annotation.ValidBaseTel;
 import org.example.odc.validator.annotation.ValidEmail;
 import org.example.odc.validator.annotation.ValidTelephone;
 import org.springframework.web.multipart.MultipartFile;
+
 @Builder(toBuilder = true)
-public record ApprenantDTORequest(
+public record ApprenantImportDTORequest(
         @NotBlank(message = "Nom du tuteur est requis")
         String nomTuteur,
 
@@ -36,10 +36,6 @@ public record ApprenantDTORequest(
         @NotNull(message = "Photo de couverture est requise")
         MultipartFile photoCouverture,
 
-//        @NotNull(message = "Utilisateur est requis")
-//        @Valid
-//        UserDTORequest user,
-
         @NotBlank(message = "Nom est requis")
         String nom,
 
@@ -60,9 +56,6 @@ public record ApprenantDTORequest(
         @NotBlank(message = "Password est requis")
         String password,
 
-        @NotBlank(message = "Status est requis")
-        String status,
-
         @NotNull(message = "la photo est requise")
         MultipartFile photo,
 
@@ -71,10 +64,10 @@ public record ApprenantDTORequest(
         String telephone,
 
         @NotNull(message = "Fonction est requis")
-        String fonctionId, // à vérifier
+        String fonctionId,
 
         @NotNull(message = "Référentiel de promo est requis")
-        Long promoReferentielId // A tester
+        String referentiel // A tester
 
 ) {
 }

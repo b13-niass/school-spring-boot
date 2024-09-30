@@ -10,7 +10,6 @@ import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
 import java.util.Arrays;
-
 @Component
 @Order(6)
 public class CompetenceSeeder implements CommandLineRunner {
@@ -29,15 +28,15 @@ public class CompetenceSeeder implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
         if (seederEnabled) {
-            Referentiel referentiel = referentielRepository.findById(1L).orElse(null);
-            Referentiel referentiel1 = referentielRepository.findById(2L).orElse(null);
+            Referentiel referentielWebDev = referentielRepository.findByCode("WD-101").orElseThrow();
+            Referentiel referentielDataSci = referentielRepository.findByCode("DS-202").orElseThrow();
 
             Competence competence1 = Competence.builder()
                     .nom("Java Programming")
                     .description("Learn the fundamentals of Java programming.")
                     .dureeAcquisition(3)
                     .type("Programming")
-                    .referentiel(referentiel)
+                    .referentiel(referentielWebDev)
                     .build();
 
             Competence competence2 = Competence.builder()
@@ -45,7 +44,7 @@ public class CompetenceSeeder implements CommandLineRunner {
                     .description("Introduction to web development using HTML, CSS, and JavaScript.")
                     .dureeAcquisition(4)
                     .type("Development")
-                    .referentiel(referentiel)
+                    .referentiel(referentielWebDev)
                     .build();
 
             Competence competence3 = Competence.builder()
@@ -53,12 +52,12 @@ public class CompetenceSeeder implements CommandLineRunner {
                     .description("Understand how to manage databases using SQL.")
                     .dureeAcquisition(2)
                     .type("Database")
-                    .referentiel(referentiel1)
+                    .referentiel(referentielDataSci)
                     .build();
 
             competenceRepository.saveAll(Arrays.asList(competence1, competence2, competence3));
             System.out.println("CompetenceSeeder is running");
-        }else {
+        } else {
             System.out.println("CompetenceSeeder is disabled");
         }
     }

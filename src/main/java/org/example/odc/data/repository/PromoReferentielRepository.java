@@ -6,6 +6,7 @@ import org.example.odc.data.entity.Role;
 import org.example.odc.enums.ReferentielStatusEnum;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 import java.util.Optional;
@@ -23,5 +24,12 @@ public interface PromoReferentielRepository extends JpaRepository<PromoReferenti
     Optional<PromoReferentiel> findByPromoAndReferentielId(Promo promo, Long referentiel_id);
 
     Optional<List<PromoReferentiel>> findByPromoIdAndReferentielStatus(Long promoId, ReferentielStatusEnum referentielEtat);
+
+    @Query("SELECT pr FROM PromoReferentiel pr " +
+            "JOIN pr.promo p " +
+            "JOIN pr.referentiel r " +
+            "WHERE p.etat = 'EN_COURS' " +
+            "AND r.code = :referentielCode")
+    Optional<PromoReferentiel> findPromoReferentielByStatusAndReferentielCode(@Param("referentielCode") String referentielCode);
 
 }
