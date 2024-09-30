@@ -9,7 +9,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import java.util.Optional;
 
-
+import org.dieng.core.exception.ReferentielException;
 
 @SpringBootApplication
 public class SchoolSpringBootApplication implements CommandLineRunner {
